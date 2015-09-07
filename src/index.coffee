@@ -66,6 +66,13 @@ module.exports = (System) ->
       styles:
         'kerplunk-city-autocomplete/css/city-autocomplete.css': ['/admin/**']
 
+  routes:
+    public:
+      '/city-auto-complete': 'demo'
+
+  handlers:
+    demo: 'demo'
+
   init: (next) ->
     searchSocket = System.getSocket 'public-city-autocomplete'
     searchSocket.on 'receive', (spark, data) ->
