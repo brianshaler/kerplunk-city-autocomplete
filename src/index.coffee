@@ -15,11 +15,11 @@ module.exports = (System) ->
 
     #minPopulation = 0
     if keyword.length < 2
-      minPopulation = 2000000
+      minPopulation = 1000000
     else if keyword.length < 3
-      minPopulation = 500000
+      minPopulation = 400000
     else if keyword.length < 4
-      minPopulation = 300000
+      minPopulation = 200000
     else if keyword.length < 5
       minPopulation = 50000
     else if keyword.length < 6
