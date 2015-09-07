@@ -22,5 +22,5 @@ module.exports = React.createFactory React.createClass
           console.log 'setting location', city
           @setState
             location: city
-      if @state.location
-        pre null, JSON.stringify @state.location, null, 2
+      if @state.location?.location
+        DOM.pre null, JSON.stringify @state.location, null, 2
