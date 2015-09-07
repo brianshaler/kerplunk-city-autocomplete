@@ -1,0 +1,40 @@
+{
+  "name": "kerplunk-city-autocomplete",
+  "displayName": "City Autocomplete",
+  "description": "An autocomplete component that searches for cities while you type.",
+  "version": "0.0.1",
+  "kerplunk": {
+    "dependencies": [
+      "kerplunk-place"
+    ],
+    "permissions": {
+      "plugins": [
+        "kerplunk-place"
+      ]
+    }
+  },
+  "keywords": [
+    "kerplunk-plugin",
+    "kp:Location",
+    "kp:Utility"
+  ],
+  "engines": {
+    "node": ">=0.10"
+  },
+  "main": "./lib/index.js",
+  "dependencies": {
+    "event-stream": "^3.3.1",
+    "lodash": "^3.10.0",
+    "react": "^0.13.3"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.9.1",
+    "glut": "0.0.1",
+    "glut-coffee-amdify": "0.0.0",
+    "gulp": "^3.8.8",
+    "gulp-coffee": "^2.3.1"
+  },
+  "scripts": {
+    "prepublish": "rm -rf ./lib ./public && gulp"
+  }
+}

@@ -1,0 +1,29 @@
+.city-autocomplete input {
+  margin-bottom: 4px;
+}
+
+.city-autocomplete-results {
+  margin-top: -2px;
+  position: absolute;
+  background-color: #fff;
+  z-index: 99;
+  border: solid 2px #3c8dbc;
+}
+
+.city-autocomplete-results a {
+  display: block;
+  margin: 0;
+  padding: 0.4em 0.6em;
+  border-bottom: solid 1px #3c8dbc;
+}
+
+.city-autocomplete-results .city-selected,
+.city-autocomplete-results a:hover {
+  background-color: #3c8dbc;
+  color: #fff;
+}
+
+.city-autocomplete input,
+.city-autocomplete-results a {
+  min-width: 30em;
+}
