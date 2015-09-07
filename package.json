@@ -8,9 +8,11 @@
       "kerplunk-place"
     ],
     "permissions": {
-      "plugins": [
-        "kerplunk-place"
-      ]
+      "kerplunk-place": {
+        "methods": [
+          "createReadStream"
+        ]
+      }
     }
   },
   "keywords": [
