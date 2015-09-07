@@ -53,30 +53,45 @@ module.exports = React.createFactory React.createClass
     val = currentVal.toLowerCase()
     pattern = /\b([a-zA-Z]+)\b/g
     words = []
+    patterns = []
     while match = pattern.exec val
       words.push match[1]
+      patterns.push new RegExp "\\b#{match[1]}", 'i'
+    if val.length < 2
+      minPopulation = 1000000
+    else if val.length < 3
+      minPopulation = 400000
+    else if val.length < 4
+      minPopulation = 200000
+    else if val.length < 5
+      minPopulation = 50000
+    else if val.length < 6
+      minPopulation = 10000
+    else
+      minPopulation = 0
     results = _ @cache
+      .filter (item) ->
+        item.population > minPopulation
       .filter (item) ->
         fullname = [
           item.name
           item.region
           item.country
         ].join(', ').toLowerCase()
-        for word in words
-          if -1 == fullname.indexOf word
-            return false
+        for pattern in patterns
+          return false unless pattern.test fullname
         words.length > 0 and words[0].length > 0
       .sortBy (item) =>
         if @props.location?.length == 2
           lng = Math.abs item.lng - @props.location[0]
           lat = Math.abs item.lat - @props.location[1]
-          Math.sqrt lng * lng + lat * lat
+          -item.population * 0.01 + 1000 * (10 + Math.sqrt lng * lng + lat * lat)
         else
           -item.population
       # .map (item) ->
       #   "#{item.name}, #{item.region}, #{item.country} (#{item.population})"
       .value()
-      .slice 0, 6
+      .slice 0, 10
 
     @setState
       results: results
@@ -94,8 +109,12 @@ module.exports = React.createFactory React.createClass
     @updateResults keyword
 
   onFocus: (e) ->
-    e.target.selectionStart = 0
-    e.target.selectionEnd = e.target.value.length
+    el = e.target
+    setTimeout ->
+      el.selectionStart = 0
+      el.selectionEnd = el.value.length
+    , 1
+    @updateResults e.target.value
     @setState
       active: true
       currentVal: e.target.value
