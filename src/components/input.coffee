@@ -16,6 +16,7 @@ module.exports = React.createFactory React.createClass
     selectedCityKey: ''
 
   componentDidMount: ->
+    window.autocompleteComponent = @
     @history = {}
     @cache = []
     @socket = @props.getSocket 'public-city-autocomplete'
@@ -23,7 +24,7 @@ module.exports = React.createFactory React.createClass
       # console.log 'data', data
       return console.log 'stahp' unless @isMounted()
       exists = _.find @cache, (item) ->
-        item.key == data.key
+        item.guid == data.guid
       @cache.push data unless exists
       @updateResults()
 
@@ -39,12 +40,13 @@ module.exports = React.createFactory React.createClass
     true
 
   formatCity: (city) ->
-    {name, region, country} = city
+    {name, region, country, population} = city
     segments = [name]
     if region?.length > 0
       segments.push region
     unless /united states/i.test country
       segments.push country
+    segments.push population
     segments = _.compact segments
     return '' unless segments.length > 0
     segments.join ', '
@@ -57,21 +59,9 @@ module.exports = React.createFactory React.createClass
     while match = pattern.exec val
       words.push match[1]
       patterns.push new RegExp "\\b#{match[1]}", 'i'
-    if val.length < 2
-      minPopulation = 1000000
-    else if val.length < 3
-      minPopulation = 400000
-    else if val.length < 4
-      minPopulation = 200000
-    else if val.length < 5
-      minPopulation = 50000
-    else if val.length < 6
-      minPopulation = 10000
-    else
-      minPopulation = 0
     results = _ @cache
-      .filter (item) ->
-        item.population > minPopulation
+      # .filter (item) ->
+      #   item.population > minPopulation
       .filter (item) ->
         fullname = [
           item.name
@@ -133,9 +123,9 @@ module.exports = React.createFactory React.createClass
       console.log 'select city!', city
       @props.onSelect city
 
-  selectByKey: (key) ->
+  selectByKey: (guid) ->
     city = _.find @cache, (city) ->
-      city.key == key
+      city.guid == guid
     if city
       @props.onSelect city
       @setState
@@ -152,18 +142,18 @@ module.exports = React.createFactory React.createClass
       e.preventDefault()
       console.log 'shhh', @state.selectedCityKey
       index = _.findIndex @state.results, (city) =>
-        city.key == @state.selectedCityKey
+        city.guid == @state.selectedCityKey
       if !index? or index == -1
         @setState
           selectedCityKey: if dir == 1
-            @state.results[0]?.key
+            @state.results[0]?.guid
           else
-            @state.results[@state.results?.length - 1]?.key
+            @state.results[@state.results?.length - 1]?.guid
         return
       index += dir
-      if @state.results[index]?.key
+      if @state.results[index]?.guid
         @setState
-          selectedCityKey: @state.results[index].key
+          selectedCityKey: @state.results[index].guid
       return
     if e.keyCode == ENTER or e.keyCode == TAB
       e.preventDefault()
@@ -190,10 +180,10 @@ module.exports = React.createFactory React.createClass
         ,
           _.map @state.results, (city) =>
             DOM.a
-              key: city.key
+              key: city.guid
               href: '#'
               onClick: @selectCity city
-              className: if @state.selectedCityKey == city.key
+              className: if @state.selectedCityKey == city.guid
                 'city-selected'
               else
                 ''

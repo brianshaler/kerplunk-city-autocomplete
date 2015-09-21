@@ -1,10 +1,12 @@
 es = require 'event-stream'
+Hifo = require 'hifo-stream'
 
 module.exports = (System) ->
 
   citySearch = (keyword) ->
     return unless keyword?.toLowerCase
     createReadStream = System.getMethod 'kerplunk-place', 'createReadStream'
+    PlaceTransforms = System.getMethod 'kerplunk-place', 'transforms'
     return console.log 'failed to get kerplunk-place:createReadStream' unless createReadStream
 
     keyword = keyword.toLowerCase()
@@ -13,53 +15,20 @@ module.exports = (System) ->
     resultsSent = 0
     minResults = 10
 
-    #minPopulation = 0
-    if keyword.length < 2
-      minPopulation = 1000000
-    else if keyword.length < 3
-      minPopulation = 400000
-    else if keyword.length < 4
-      minPopulation = 200000
-    else if keyword.length < 5
-      minPopulation = 50000
-    else if keyword.length < 6
-      minPopulation = 10000
-    else
-      minPopulation = 0
-    obj =
-      method: 'citySearch'
-      keyword: keyword
+    key = "nm:#{keyword}"
     opt =
-      start: keyword
-      end: keyword + String.fromCharCode 255
+      start: key
+      end: key + String.fromCharCode 255
 
-    filterResults = es.map (data, callback) ->
-      val = data.value
-      obj =
-        key: data.key
-        name: val[0]
-        region: val[1]
-        country: val[2]
-        lng: val[3]
-        lat: val[4]
-        population: val[5]
-        cityId: val[6]
-        timezone: val[7]
-      if resultsSent > minResults or obj.population == 0
-        unless obj.population > minPopulation or val?[0]?.toLowerCase() == keyword
-          return callback()
-      resultsSent++
-      # console.log "result ##{resultsSent}: #{obj.name} - #{obj.population}"
-      callback null, obj
+    levelToCity = es.map (data, callback) ->
+      callback null, PlaceTransforms().levelToCity data.value
 
-    stream = createReadStream opt
-    stream.pipe filterResults
-    stream.on 'data', (data) ->
-      # data.value = [name, region, country, lng, lat, population]
-      #if data.value[5]
-      #searchSocket.broadcast data
-    stream
-    filterResults
+    sortfn = (a, b) -> b.value[5] - a.value[5]
+
+    hifo = Hifo sortfn, 10
+    createReadStream opt
+    .pipe hifo.filter()
+    .pipe levelToCity
 
   globals:
     public:

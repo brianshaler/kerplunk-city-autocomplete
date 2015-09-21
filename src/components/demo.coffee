@@ -52,7 +52,7 @@ module.exports = React.createFactory React.createClass
               console.log 'setting location', city
               @setState
                 location: city
-          if @state.location?.key
+          if @state.location?.guid
             DOM.pre null, JSON.stringify @state.location, null, 2
         DOM.div
           className: 'col col-sm-6'
