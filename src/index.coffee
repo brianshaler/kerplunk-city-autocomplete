@@ -32,8 +32,8 @@ module.exports = (System) ->
 
   globals:
     public:
-      styles:
-        'kerplunk-city-autocomplete/css/city-autocomplete.css': ['/admin/**']
+      css:
+        'kerplunk-city-autocomplete:input': 'kerplunk-city-autocomplete/css/city-autocomplete.css'
 
   routes:
     public:
