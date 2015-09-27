@@ -23,7 +23,7 @@ module.exports = (System) ->
     levelToCity = es.map (data, callback) ->
       callback null, PlaceTransforms().levelToCity data.value
 
-    sortfn = (a, b) -> b.value[5] - a.value[5]
+    sortfn = (a, b) -> b.value[6] - a.value[6]
 
     hifo = Hifo sortfn, 10
     createReadStream opt
