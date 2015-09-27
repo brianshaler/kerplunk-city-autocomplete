@@ -37,7 +37,7 @@ module.exports = (System) ->
 
   routes:
     public:
-      '/city-auto-complete': 'demo'
+      '/city-autocomplete': 'demo'
 
   handlers:
     demo: 'demo'
