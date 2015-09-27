@@ -77,8 +77,10 @@ module.exports = React.createFactory React.createClass
         words.length > 0 and words[0].length > 0
       .sortBy (item) =>
         if @props.location?.length == 2
-          lng = Math.abs item.lng - @props.location[0]
-          lat = Math.abs item.lat - @props.location[1]
+          itemLng = item.lng ? item.location?[0]
+          itemLat = item.lat ? item.location?[1]
+          lng = Math.abs itemLng - @props.location[0]
+          lat = Math.abs itemLat - @props.location[1]
           -item.population * 0.01 + 1000 * (10 + Math.sqrt lng * lng + lat * lat)
         else
           -item.population
