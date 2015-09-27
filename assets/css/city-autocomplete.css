@@ -23,7 +23,11 @@
   color: #fff;
 }
 
-.city-autocomplete input,
+.city-autocomplete input {
+  width: 100%;
+  max-width: 30em;
+}
+
 .city-autocomplete-results a {
   min-width: 30em;
 }
