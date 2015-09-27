@@ -2,7 +2,7 @@
   "name": "kerplunk-city-autocomplete",
   "displayName": "City Autocomplete",
   "description": "An autocomplete component that searches for cities while you type.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "kerplunk": {
     "dependencies": [
       "kerplunk-place"
