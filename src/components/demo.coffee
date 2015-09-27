@@ -29,6 +29,8 @@ module.exports = React.createFactory React.createClass
         coords: coords
 
   render: ->
+    @props.getComponent 'kerplunk-city-autocomplete:input'
+
     coords = [parseFloat(@state.coords[0]), parseFloat(@state.coords[1])]
     coords = null if isNaN(coords[0]) or isNaN(coords[1])
     coords = null if coords?[0] == 0 and coords?[1] == 0
