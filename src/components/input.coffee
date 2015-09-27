@@ -4,6 +4,10 @@ React = require 'react'
 {DOM} = React
 
 module.exports = React.createFactory React.createClass
+  getDefaultProps: ->
+    onChange: ->
+    onSelect: ->
+
   getInitialState: ->
     currentVal = if @props.city
       @formatCity @props.city
@@ -46,7 +50,7 @@ module.exports = React.createFactory React.createClass
       segments.push region
     unless /united states/i.test country
       segments.push country
-    segments.push population
+    # segments.push population
     segments = _.compact segments
     return '' unless segments.length > 0
     segments.join ', '
