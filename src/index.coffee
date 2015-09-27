@@ -46,11 +46,9 @@ module.exports = (System) ->
     searchSocket = System.getSocket 'public-city-autocomplete'
     searchSocket.on 'receive', (spark, data) ->
       if data?.keyword
-        # console.log 'search!', data.keyword
-        stream = citySearch data.keyword
-        stream.on 'data', (obj) ->
+        citySearch data.keyword
+        .on 'data', (obj) ->
           spark.write obj
-        #startArchive()
       else
         console.log 'client said what?', data
     searchSocket.on 'connection', (spark, data) ->
