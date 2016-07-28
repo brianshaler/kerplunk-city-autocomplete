@@ -7,9 +7,21 @@ Input = require './input'
 
 module.exports = React.createFactory React.createClass
   getInitialState: ->
-    location: {}
-    coords: [0,0]
+    location: @props.location ? {}
+    coords: [@props.longitude ? 0, @props.latitude ? 0]
     useCoords: true
+
+  componentWillReceiveProps: (props) ->
+    diff = {}
+    if props.location? and !_.isEqual props.location, @state.location
+      diff.location = props.location
+    if props.longitude? or props.latitude?
+      diff.coords = [
+          props.longitude ? @state.longitude
+          props.latitude ? @state.latitude
+        ]
+    if Object.keys(diff).length > 0
+      @setState diff
 
   updateCoord: (key) ->
     (e) =>
@@ -52,6 +64,11 @@ module.exports = React.createFactory React.createClass
             location: (coords if coords)
             onSelect: (city) =>
               console.log 'setting location', city
+              if @props.onChange
+                @props.onChange
+                  location: city
+                  longitude: city?.location?[0]
+                  latitude: city?.location?[1]
               @setState
                 location: city
           if @state.location?.guid
